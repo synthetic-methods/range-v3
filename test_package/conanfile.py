@@ -9,25 +9,31 @@
 #
 # Project home: https://github.com/ericniebler/range-v3
 #
-
-
-from conans import ConanFile, CMake
 import os
+from conan             import ConanFile
+from conan.tools.cmake import CMake, cmake_layout
 
+class RangeV3_TestPackage__Conan(ConanFile):
+    required_conan_version = ">=2.0.0"
 
-class Rangev3TestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "cmake"
+    generators = "CMakeToolchain", "CMakeDeps"
+
+    def requirements(self):
+        self.requires(self.tested_reference_str)
+
+    def imports(self):
+        for glob in ["*.dll", "*.dylib"]:
+            self.copy(glob, "bin", "bin")
+
+    def layout(self):
+        cmake_layout(self)
 
     def build(self):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
 
-    def imports(self):
-        self.copy("*.dll", "bin", "bin")
-        self.copy("*.dylib", "bin", "bin")
-
     def test(self):
-        os.chdir("bin")
+        os.chdir(self.cpp.build.bindir)
         self.run(".%srange-v3-example" % os.sep)

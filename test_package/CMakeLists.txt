@@ -10,14 +10,24 @@
 # Project home: https://github.com/ericniebler/range-v3
 #
 
-PROJECT(PackageTest)
-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
+#PROJECT(PackageTest)
+#cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
+#
+#include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#conan_basic_setup()
+#
+#add_executable(range-v3-example example.cpp)
+#
+#target_link_libraries(range-v3-example ${CONAN_LIBS})
+#
+#set_property(TARGET range-v3-example PROPERTY CXX_STANDARD 17)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+cmake_minimum_required(VERSION 3.14)
+project(test_package)
+
+find_package(range-v3 CONFIG REQUIRED)
 
 add_executable(range-v3-example example.cpp)
 
-target_link_libraries(range-v3-example ${CONAN_LIBS})
-
+target_link_libraries(range-v3-example range-v3::range-v3)
 set_property(TARGET range-v3-example PROPERTY CXX_STANDARD 17)

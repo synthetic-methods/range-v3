@@ -1,0 +1,12 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/Users/adventurer/Documents/synthetic-methods/C++/Packages/range-v3/test_package/build/clang-14-x86_64-20-release/generators/CMakePresets.json",
+        "/Users/adventurer/Documents/synthetic-methods/C++/Packages/range-v3/test_package/build/clang-14-x86_64-20-debug/generators/CMakePresets.json",
+        "/Users/adventurer/Documents/synthetic-methods/C++/Packages/range-v3/test_package/build/gcc-12-x86_64-20-debug/generators/CMakePresets.json",
+        "/Users/adventurer/Documents/synthetic-methods/C++/Packages/range-v3/test_package/build/gcc-12-x86_64-20-release/generators/CMakePresets.json"
+    ]
+}

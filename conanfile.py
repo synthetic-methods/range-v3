@@ -9,27 +9,52 @@
 #
 # Project home: https://github.com/ericniebler/range-v3
 #
+import os
+from conan import ConanFile
+from conan.tools.files import copy
+from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
+from conan.tools.build import check_min_cppstd
 
-from conans import ConanFile, CMake
+class RangeV3__Conan(ConanFile):
+    required_conan_version = ">=2.0.0"
 
-class Rangev3Conan(ConanFile):
+    # Info:
+    url = "https://github.com/ericniebler/range-v3"
     name = "range-v3"
     version = "0.12.0"
     license = "Boost Software License - Version 1.0 - August 17th, 2003"
-    url = "https://github.com/ericniebler/range-v3"
     description = """Experimental range library for C++14/17/20"""
-    # No settings/options are necessary, this is header only
-    exports_sources = "include*", "LICENSE.txt", "CMakeLists.txt", "cmake/*", "Version.cmake", "version.hpp.in"
+
+    # Build:
+    settings = "os", "arch", "compiler", "build_type"
+    generators = "CMakeDeps", "CMakeToolchain"
+    
+    def layout(self):
+        cmake_layout(self)
+
+    def validate(self):
+        check_min_cppstd(self, 14)
+
+    # Package:
     no_copy_source = True
+    exports_sources = "include*", "LICENSE.txt", "CMakeLists.txt", "cmake/*", "Version.cmake", "version.hpp.in"
 
     def package(self):
+        for glob in self.exports_sources:
+            copy(self, glob, self.source_folder, self.package_folder)
         cmake = CMake(self)
-        cmake.definitions["RANGE_V3_TESTS"] = "OFF"
-        cmake.definitions["RANGE_V3_EXAMPLES"] = "OFF"
-        cmake.definitions["RANGE_V3_PERF"] = "OFF"
-        cmake.definitions["RANGE_V3_DOCS"] = "OFF"
-        cmake.definitions["RANGE_V3_HEADER_CHECKS"] = "OFF"
-        cmake.configure()
+        cmake.configure({
+            "RANGE_V3_DOCS": "OFF",
+            "RANGE_V3_PERF": "OFF",
+            "RANGE_V3_TESTS": "OFF",
+            "RANGE_V3_EXAMPLES": "OFF",
+            "RANGE_V3_HEADER_CHECKS": "OFF"
+        })
         cmake.install()
 
-        self.copy("LICENSE.txt", dst="licenses", ignore_case=True, keep_path=False)
+    def package_id(self):
+        self.info.clear()
+
+    def package_info(self):
+        self.cpp_info.bindirs = []
+        self.cpp_info.libdirs = []
